@@ -2,7 +2,11 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.conf import settings
 from django.utils import timezone
 from .models import Link, Visit, VisitStatistics
-from .services import get_short_url_hash, get_ip_address
+from .services import (
+    get_short_url_hash,
+    get_ip_address,
+    write_excel_file
+)
 from .forms import UrlForm
 
 
@@ -57,6 +61,7 @@ def redirect_url(request, token):
 
     :field:`url_shortener.Link.full_url`
     """
+    print('redirect_url')
     link = Link.objects.filter(slug=token).first()
     ip_address = get_ip_address(request)
     Visit.objects.create(ip_address=ip_address, link=link)
@@ -65,7 +70,7 @@ def redirect_url(request, token):
     statistics.save()
     return redirect(link.full_url)
 
-def statistics_view(request):
+def statistics(request):
     """
     Display statistics on visiting urls stored in daat base - list of :model:`url_shortener.VisitStatistics`.
 
@@ -80,3 +85,22 @@ def statistics_view(request):
     links = Link.objects.all()
     context = { 'links': links }
     return render(request, 'statistics.html', context)
+
+def excel_export(request):
+    """
+    Generate and return Excel file with statistics on visiting urls - list of :model:`url_shortener.VisitStatistics`.
+
+    **Context**
+    ``links``
+        A list of :model:`url_shortener.Link`.
+
+    **Response:**
+
+    :excel file:`django.shortcuts.HttpResponse`
+    """
+    links = Link.objects.all()
+    xlsx_data = write_excel_file(links, request)
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Statistics.xlsx'
+    response.write(xlsx_data)
+    return response

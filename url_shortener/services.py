@@ -1,5 +1,7 @@
 import random
 import string
+import xlsxwriter
+from io import StringIO, BytesIO
 from django.utils import timezone
 
 
@@ -24,3 +26,42 @@ def get_ip_address(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+def write_excel_file(data, request):
+    """Write data to excel file
+    
+    Keyword arguments:
+    data -- data to write to excel file
+    Return: return_description
+    """
+    output = BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    print('1')
+
+    server_uri = request.build_absolute_uri('/')
+            
+    # create working sheet
+    worksheet_s = workbook.add_worksheet("Статистика посещений")
+    # create header
+    header = workbook.add_format({
+        'color': 'black',
+        'align': 'center',
+        'valign': 'top',
+        'border': 1
+    })
+    print('2')
+    worksheet_s.write(0, 0, "Ссылка", header)
+    worksheet_s.write(0, 1, "Короткая cсылка", header)
+    worksheet_s.write(0, 2, "# посещений", header)
+    print('3')
+    for idx, data_row in enumerate(data):
+        row = 2 + idx
+        worksheet_s.write_string(row, 0, data_row.full_url)
+        short_url = f'{server_uri}{data_row.slug}'
+        worksheet_s.write_string(row, 1, short_url)
+        worksheet_s.write_number(row, 2, data_row.statistics.total_visits)
+    workbook.close()
+    xlsx_data = output.getvalue()
+    return xlsx_data
+
+    
