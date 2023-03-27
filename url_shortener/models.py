@@ -26,7 +26,7 @@ class Visit(models.Model):
     """Model definition for Visit."""
     datetime = models.DateTimeField(default=timezone.now)
     ip_address = models.CharField(max_length=50)
-    link = models.ForeignKey(Link, on_delete=models.CASCADE)
+    link = models.ForeignKey(Link, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         """Unicode representation of Visit."""
