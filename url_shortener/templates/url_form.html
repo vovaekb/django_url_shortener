@@ -1,1 +1,8 @@
-<h3>Форма для сокращения ссылки</h3>
+<h2>Форма для сокращения ссылки</h2>
+<form method="POST">
+    {% csrf_token %}
+    <h3>{{ error_message }}</h3>
+    {{ form.as_p }}
+    <input type="submit" value="Сократить" >
+</form>
+<a href="{{ short_url }}">{{ short_url }}</a>
