@@ -1,5 +1,5 @@
 # django_url_shortener_api
-:memo: Simple web application for shortening URL addresses on Python Django.
+:link: Simple web application for shortening URL addresses on Python Django.
 
 Features:
 - no registration needed
