@@ -28,7 +28,3 @@ class Visit(models.Model):
     ip_address = models.CharField(max_length=50)
     link = models.ForeignKey(Link, on_delete=models.CASCADE, blank=True, null=True)
 
-    def __str__(self):
-        """Unicode representation of Visit."""
-        pass
-
