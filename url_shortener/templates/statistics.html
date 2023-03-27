@@ -1,0 +1,6 @@
+<h3>Статистика посещений ссылок</h3>
+<ul>
+    {% for link in links %}
+        <li><p>{{ link.full_url }} - {{ link.statistics.total_visits }}</p></li>
+    {% endfor %}
+</ul>
