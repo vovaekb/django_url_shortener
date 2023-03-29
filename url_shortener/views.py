@@ -29,7 +29,6 @@ def short_url_view(request):
         if form.is_valid():
             url = request.POST['url']
             url_token = get_short_url_hash()
-            print('url: ', url, ', url_hash:', url_token)
             server_uri = request.build_absolute_uri('/')
             short_url = f'{server_uri}{url_token}'
             context = {
@@ -42,7 +41,6 @@ def short_url_view(request):
     else:
         error_message = ''
         server_uri = request.build_absolute_uri('/')
-        print('server_uri: ', server_uri)
         context = {
             'form': form,
             'error_message': error_message
@@ -61,7 +59,6 @@ def redirect_url(request, token):
 
     :field:`url_shortener.Link.full_url`
     """
-    print('redirect_url')
     link = Link.objects.filter(slug=token).first()
     ip_address = get_ip_address(request)
     Visit.objects.create(ip_address=ip_address, link=link)

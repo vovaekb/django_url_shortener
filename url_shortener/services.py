@@ -36,7 +36,6 @@ def write_excel_file(data, request):
     """
     output = BytesIO()
     workbook = xlsxwriter.Workbook(output)
-    print('1')
 
     server_uri = request.build_absolute_uri('/')
             
@@ -49,11 +48,9 @@ def write_excel_file(data, request):
         'valign': 'top',
         'border': 1
     })
-    print('2')
     worksheet_s.write(0, 0, "Ссылка", header)
     worksheet_s.write(0, 1, "Короткая cсылка", header)
     worksheet_s.write(0, 2, "# посещений", header)
-    print('3')
     for idx, data_row in enumerate(data):
         row = 2 + idx
         worksheet_s.write_string(row, 0, data_row.full_url)
